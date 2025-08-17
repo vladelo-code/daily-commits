@@ -17,13 +17,18 @@ jobs:
           git config user.name "vladelo777"
           git config user.email "vlad.lakhtion@gmail.com"
 
-      - name: Make 7 commits
+      - name: Make random commits
         run: |
-          for i in {1..7}
+          count=$((RANDOM % 9 + 12))  # Диапазон 12–20
+          echo "Making $count commits"
+          for i in $(seq 1 $count)
           do
             echo "Commit $i on $(date)" >> daily.txt
             git add daily.txt
             git commit -m "Auto commit $i on $(date)"
             sleep 15  # пауза между коммитами (15 сек)
           done
-          git push
+
+      - name: Push changes
+        run: |
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
